@@ -121,6 +121,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullAge_notOk() {
+        User user = new User();
+        user.setLogin("abcdef");
+        user.setPassword("qwerty");
+        user.setAge(null);
+
+        assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
     void register_age18_ok() {
         User user = new User();
         user.setLogin("abcdef");
