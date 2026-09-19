@@ -97,7 +97,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         User user = new User();
-        user.setLogin("abcdef");
+        user.setLogin("abcdeg");
         user.setPassword(null);
         user.setAge(20);
 
