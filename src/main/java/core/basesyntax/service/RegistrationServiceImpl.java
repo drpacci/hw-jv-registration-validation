@@ -16,22 +16,38 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User is null");
         }
 
-        if (user.getLogin() == null || user.getLogin().length() < MIN_SYMBOLS_LOGIN) {
-            throw new RegistrationException("Login is invalid");
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login is null");
+        }
+        if (user.getLogin().length() < MIN_SYMBOLS_LOGIN) {
+            throw new RegistrationException(
+                    "Login '" + user.getLogin() + "' is too short. Minimum length is " + MIN_SYMBOLS_LOGIN
+            );
         }
 
-        if (user.getPassword() == null || user.getPassword().length() < MIN_SYMBOLS_PASSWORD) {
-            throw new RegistrationException("Password is invalid");
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password is null");
+        }
+        if (user.getPassword().length() < MIN_SYMBOLS_PASSWORD) {
+            throw new RegistrationException(
+                    "Password '" + user.getPassword() + "' is too short. Minimum length is " + MIN_SYMBOLS_PASSWORD
+            );
         }
 
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age is null");
+        }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("User is too young");
+            throw new RegistrationException(
+                    "Age " + user.getAge() + " is too young. Minimum age is " + MIN_AGE
+            );
         }
 
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User already exists");
+            throw new RegistrationException(
+                    "User with login '" + user.getLogin() + "' already exists"
+            );
         }
-
         return storageDao.add(user);
     }
 }

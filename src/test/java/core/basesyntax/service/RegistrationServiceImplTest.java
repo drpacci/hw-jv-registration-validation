@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
 
@@ -67,7 +66,7 @@ class RegistrationServiceImplTest {
         user.setPassword("qwerty");
         user.setAge(20);
 
-        registrationService.register(user);
+        Storage.people.add(user);
 
         User user2 = new User();
         user2.setLogin("test123");
@@ -92,5 +91,96 @@ class RegistrationServiceImplTest {
         assertEquals(user, actual);
         assertEquals(1, Storage.people.size());
         assertEquals(user, Storage.people.get(0));
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        User user = new User();
+        user.setLogin("abcdef");
+        user.setPassword(null);
+        user.setAge(20);
+
+        assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = new User();
+        user.setLogin("abcdef");
+        user.setPassword("qwerty");
+        user.setAge(-5);
+
+        assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_age18_ok() {
+        User user = new User();
+        user.setLogin("abcdef");
+        user.setPassword("qwerty");
+        user.setAge(18);
+
+        User actual = registrationService.register(user);
+
+        assertEquals(user, actual);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_loginLength5_notOk() {
+        User user = new User();
+        user.setLogin("abcde"); // 5 chars
+        user.setPassword("qwerty");
+        user.setAge(20);
+
+        assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_loginLength6_ok() {
+        User user = new User();
+        user.setLogin("abcdef"); // 6 chars
+        user.setPassword("qwerty");
+        user.setAge(20);
+
+        User actual = registrationService.register(user);
+
+        assertEquals(user, actual);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_passwordLength5_notOk() {
+        User user = new User();
+        user.setLogin("abcdef");
+        user.setPassword("abcde"); // 5 chars
+        user.setAge(20);
+
+        assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_passwordLength6_ok() {
+        User user = new User();
+        user.setLogin("abcdef");
+        user.setPassword("abcdef"); // 6 chars
+        user.setAge(20);
+
+        User actual = registrationService.register(user);
+
+        assertEquals(user, actual);
+        assertEquals(1, Storage.people.size());
     }
 }
