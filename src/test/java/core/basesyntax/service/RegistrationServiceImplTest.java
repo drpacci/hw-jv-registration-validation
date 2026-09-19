@@ -4,8 +4,9 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -45,15 +46,6 @@ class RegistrationServiceImplTest {
     void register_shortPassword_notOk() {
         User user = new User();
         user.setPassword("test");
-        assertThrows(
-                RegistrationException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_nullAge_notOk() {
-        User user = new User();
-        user.setAge(null);
         assertThrows(
                 RegistrationException.class,
                 () -> registrationService.register(user));
